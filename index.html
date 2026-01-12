@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+ </head>
+<body>
+    <div class="card"> 
+        <div class="search">
+        <input type="text" placeholder="enter city name " spellcheck="false">
+        <button><img src="images/search.png" ></button>
+        </div>
+        <div class="weather">
+            <img src="images/rain.png" class="weather-icon">     
+            <h1 class="temp">22°c</h1>
+            <h2 class="city">New York</h2>
+            <div class="details">
+                <div class="col"><img src="images/humidity.png" >
+                    <div>
+                    <p class="humidity">50%</p>
+                    <p>Humidity</p>
+                </div>
+            </div>
+            <div class="col"><img src="images/wind.png" >
+                <div>
+                <p class="wind">15 km/hr </p>
+                <p>wind speed</p>
+            </div>
+        </div>
+        </div>
+    </div>
+    <script>
+       const apiKey = "b856b608c2a1e19f29e1088855c7d468";
+       const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+       const weathericon = document.querySelector(".weather-icon")
+
+const searchBox = document.querySelector(".search input");                       /* we stored the element of search input in searchBox */
+const searchBtn = document.querySelector(".search button");                      /* we stored the element of search button in searchBtn*/
+
+async function checkWeather(city) {
+    const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
+    
+    if (!response.ok) {
+        alert("City not found!");                                                 /* this function is used to get data from the api url and api id amd stored it on data and consoled it to view the data in the our console in onspect*/
+
+        return;
+    }
+
+    const data = await response.json();
+
+    console.log(data);
+
+    
+    document.querySelector(".city").innerHTML = data.name;                            /* here we are just replacing the default elements by whatever we input the place and their details that we get from api which we linked the here by watching it in the console in  inspect  */
+    document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°C";
+    document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+    document.querySelector(".wind").innerHTML = data.wind.speed + " km/h";
+
+   if(data.weather[0].main == "Clouds" ){
+    weathericon.src = "images/clouds.png";
+   }
+   else if ( data.weather[0].main == "clear"){                                     /*   here also we are just replacing the images based on what response we get like rain pic i its rain , sunny pic if its sunny etc......*/
+     weathericon.src = "images/clear.png"
+   } 
+   else if ( data.weather[0].main == "Drizzle"){
+     weathericon.src = "images/drizzle.png"
+   } 
+   else if ( data.weather[0].main == "Mist"){
+     weathericon.src = "images/mist.png"
+   } 
+
+
+
+   }
+
+
+
+
+
+searchBtn.addEventListener("click", () => {                          /* here we added event listening cuz whenever we click on search button it will store the data of the input we give and that data will get inserted inside the function which is serachbox.value and here we added an event to searchBtn*/
+    checkWeather(searchBox.value);         
+});
+
+
+checkWeather("New York");
+        </script>
+    
+</body>
+</html>
